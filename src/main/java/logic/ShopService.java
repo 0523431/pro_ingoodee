@@ -12,14 +12,15 @@ import org.springframework.web.multipart.MultipartFile;
 
 import dao.BoardDao;
 import dao.ListDao;
+import dao.PoohDao;
 import dao.ItemDao;
 import dao.SaleDao;
 import dao.SaleItemDao;
 import dao.UserDao;
 
-@Service //@Component + service ê¸°ëŠ¥ : controllerì™€ dbì˜ ì¤‘ê°„ì—­í• 
+@Service //@Component + service ±â´É : controller¿Í dbÀÇ Áß°£¿ªÇÒ
 public class ShopService {
-	@Autowired //ë‚´ì»¨í…Œì´ë„ˆì•ˆì˜ ê°ì²´ì¤‘ ìë£Œí˜•ì´ ItemDaoì¸ ê²ƒì„ ì£¼ì… ->@service
+	@Autowired //³»ÄÁÅ×ÀÌ³Ê¾ÈÀÇ °´Ã¼Áß ÀÚ·áÇüÀÌ ItemDaoÀÎ °ÍÀ» ÁÖÀÔ ->@service
 	private ItemDao itemDao;
 	@Autowired
 	private UserDao userDao;
@@ -36,25 +37,25 @@ public class ShopService {
 		return itemDao.list();
 	}
 
-	public void itemCreate(Item item, HttpServletRequest request) { //itemì˜ ë‚´ìš©ì„ ë“±ë¡
-		//ì—…ë¡œë“œëœ ì´ë¯¸ì§€ íŒŒì¼ì´ ì¡´ì¬í•  ë•Œ
+	public void itemCreate(Item item, HttpServletRequest request) { //itemÀÇ ³»¿ëÀ» µî·Ï
+		//¾÷·ÎµåµÈ ÀÌ¹ÌÁö ÆÄÀÏÀÌ Á¸ÀçÇÒ ¶§
 		if(item.getPicture()!=null && !item.getPicture().isEmpty()) {
-			//íŒŒì¼ ì—…ë¡œë“œ : ì—…ë¡œë“œëœ íŒŒì¼ì˜ ë‚´ìš©ì„ íŒŒì¼ì— ì €ì¥
+			//ÆÄÀÏ ¾÷·Îµå : ¾÷·ÎµåµÈ ÆÄÀÏÀÇ ³»¿ëÀ» ÆÄÀÏ¿¡ ÀúÀå
 			uploadFileCreate(item.getPicture(),request,"item/img/");
-							// â†‘ pictureì„ íŒŒì¼í™”, ê²½ë¡œì§€ì •
+							// ¡è pictureÀ» ÆÄÀÏÈ­, °æ·ÎÁöÁ¤
 			item.setPictureUrl(item.getPicture().getOriginalFilename());
 		}
 		itemDao.insert(item);
 	}
-	//â†‘
+	//¡è
 	private void uploadFileCreate(MultipartFile picture, HttpServletRequest request, String path) {
-		//picture : ì—…ë¡œë“œëœ íŒŒì¼ì˜ ë‚´ìš©
+		//picture : ¾÷·ÎµåµÈ ÆÄÀÏÀÇ ³»¿ë
 		String orgFile = picture.getOriginalFilename();
-		String uploadPath = request.getServletContext().getRealPath("/") + path; //íŒŒì¼ì„ ë§Œë“¤ì–´ì¤Œ
+		String uploadPath = request.getServletContext().getRealPath("/") + path; //ÆÄÀÏÀ» ¸¸µé¾îÁÜ
 		File fpath = new File(uploadPath);
-		if(!fpath.exists()) fpath.mkdirs(); //í•´ë‹¹ pathê°€ì—†ìœ¼ë©´ ìƒì„±
+		if(!fpath.exists()) fpath.mkdirs(); //ÇØ´ç path°¡¾øÀ¸¸é »ı¼º
 		try {
-			//pictureì— ìˆëŠ” ê²ƒ íŒŒì¼ë¡œ ìƒì„±
+			//picture¿¡ ÀÖ´Â °Í ÆÄÀÏ·Î »ı¼º
 			picture.transferTo(new File(uploadPath + orgFile));
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -66,8 +67,8 @@ public class ShopService {
 	}
 
 	public void itemUpdate(Item item, HttpServletRequest request) {
-		//íŒŒì¼ì—…ë¡œë“œê°€ ìˆìœ¼ë©´ ì—…ë¡œë“œ, ì—†ìœ¼ë©´ dbë§Œ ìˆ˜ì •
-		//ìˆ˜ì •ëœ ì´ë¯¸ì§€ ì¡´ì¬
+		//ÆÄÀÏ¾÷·Îµå°¡ ÀÖÀ¸¸é ¾÷·Îµå, ¾øÀ¸¸é db¸¸ ¼öÁ¤
+		//¼öÁ¤µÈ ÀÌ¹ÌÁö Á¸Àç
 		if(item.getPicture()!=null && !item.getPicture().isEmpty()) {
 			uploadFileCreate(item.getPicture(),request,"item/img/");
 			item.setPictureUrl(item.getPicture().getOriginalFilename());
@@ -89,29 +90,29 @@ public class ShopService {
 
 	public Sale checkend(User loginUser, Cart cart) {
 		Sale sale = new Sale();
-		sale.setSaleid(saleDao.getMaxSaleId()); //saleidê°’ + 1
-		sale.setUser(loginUser); //êµ¬ë§¤ì ì •ë³´(ë¡œê·¸ì¸ì •ë³´)
-		//sale.setUserid(loginUser.getUserid()); //êµ¬ë§¤ì idê°’ë§Œ
-		sale.setUpdatetime(new Date());//ì£¼ë¬¸ì‹œê°„
+		sale.setSaleid(saleDao.getMaxSaleId()); //saleid°ª + 1
+		sale.setUser(loginUser); //±¸¸ÅÀÚ Á¤º¸(·Î±×ÀÎÁ¤º¸)
+		//sale.setUserid(loginUser.getUserid()); //±¸¸ÅÀÚ id°ª¸¸
+		sale.setUpdatetime(new Date());//ÁÖ¹®½Ã°£
 		saleDao.insert(sale);
-		//ì£¼ë¬¸ìƒí’ˆì •ë³´ë¥¼ cartì—ì„œ ì¡°íšŒ
+		//ÁÖ¹®»óÇ°Á¤º¸¸¦ cart¿¡¼­ Á¶È¸
 		List<ItemSet> itemList = cart.getItemSetList();
 		int i = 0;
 		for(ItemSet is : itemList) {
-			int saleItemId = ++i;//					1,			1,		ItemSetê°ì²´
+			int saleItemId = ++i;//					1,			1,		ItemSet°´Ã¼
 			SaleItem saleItem = new SaleItem(sale.getSaleid(),saleItemId,is);
-			sale.getItemList().add(saleItem);//ì²«ë²ˆì§¸ ìƒí’ˆ ì¶”ê°€
-			saleItemDao.insert(saleItem);//dbì— ì¶”ê°€
+			sale.getItemList().add(saleItem);//Ã¹¹øÂ° »óÇ° Ãß°¡
+			saleItemDao.insert(saleItem);//db¿¡ Ãß°¡
 		}
 		return sale;
 	}
 
 	public List<Sale> salelist(String id) {
-		return saleDao.list(id); //ì‚¬ìš©ì id
+		return saleDao.list(id); //»ç¿ëÀÚ id
 	}
 
 	public List<SaleItem> saleItemList(int saleid) {
-		return saleItemDao.list(saleid); //saleid : ì£¼ë¬¸ë²ˆí˜¸
+		return saleItemDao.list(saleid); //saleid : ÁÖ¹®¹øÈ£
 	}
 
 	public void userupdate(User user) {
@@ -131,13 +132,13 @@ public class ShopService {
 	}
 
 	public void boardWrite(Board board, HttpServletRequest request) {
-		//ì²¨ë¶€íŒŒì¼ì´ ì¡´ì¬í•˜ëŠ” ê²½ìš°
+		//Ã·ºÎÆÄÀÏÀÌ Á¸ÀçÇÏ´Â °æ¿ì
 		if(board.getFile1()!=null && !board.getFile1().isEmpty()) {
 			uploadFileCreate(board.getFile1(), request, "board/file/");
-			//ì—…ë¡œë“œë  íŒŒì¼ ì´ë¦„ì„ ì„¤ì •
+			//¾÷·ÎµåµÉ ÆÄÀÏ ÀÌ¸§À» ¼³Á¤
 			board.setFileurl(board.getFile1().getOriginalFilename());
 		}
-		//í˜„ì¬ ë“±ë¡ëœ ê²Œì‹œë¬¼ ë²ˆí˜¸ì˜ ìµœëŒ€ê°’
+		//ÇöÀç µî·ÏµÈ °Ô½Ã¹° ¹øÈ£ÀÇ ÃÖ´ë°ª
 		int max = boardDao.maxnum();
 		board.setNum(++max);
 		board.setGrp(max);
@@ -153,5 +154,9 @@ public class ShopService {
 
 	public List<Class> classList() {
 		return listDao.list();
+	}
+
+	public Class classDetail(int cl_num) {
+		return listDao.classDetail(cl_num);
 	}
 }

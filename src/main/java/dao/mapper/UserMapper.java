@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
+import logic.Postaddr;
 import logic.User;
 
 public interface UserMapper {
@@ -32,4 +33,6 @@ public interface UserMapper {
 
 	@Update("update userbackup set password=#{chgpass} where emailid=#{emailid}")
 	void passupdate(Map<Object, Object> param);
+	
+
 }

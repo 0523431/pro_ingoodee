@@ -25,10 +25,10 @@ public class UserDao {
 	
 	public User selectOne(String emailid) {
 		param.clear();
-		param.put("emailid",emailid);
+		param.put("emailid", emailid);
 		List<User> list = sqlSession.getMapper(UserMapper.class).select(param);
 		if(list==null || list.isEmpty()){
-			throw new LoginException("í•´ë‹¹ ì•„ì´ë”” ì—†ìŒ","");
+			throw new LoginException("ÇØ´ç ¾ÆÀÌµğ ¾øÀ½","");
 		}else 
 		return list.get(0);
 	}

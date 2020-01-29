@@ -35,7 +35,7 @@
 </head>
 <body>
 <div class="container">
-<c:forEach items="${classList}" var="list">
+<%-- <c:forEach items="${classList}" var="list"> --%>
 	<div class="vod-wrap">
 		<div class="vod-cont vimeohelper-92950 vimeohelper"
 			data-vimeo-initialized="true">
@@ -47,11 +47,11 @@
 		</div>
 			<div class="vod-info-wrap">
 				<div class="vod-info-tit view-class-title">
-					<span class="i-lecturer">${list.teacher}</span>
-					${list.cl_title}
+					<span class="i-lecturer">${classDetail.teacher}</span>
+					${classDetail.cl_title}
 				</div>
 				<div class="vod-info-price-discount">
-					 <span class="i-regularPrice view-class-discount-regularPrice">210,000원</span>
+					 <span class="i-regularPrice view-class-discount-regularPrice">${classDetail.cl_price}원</span>
 				</div>
 			
 				<ul class="vod-info-list">
@@ -61,7 +61,7 @@
 </li-->
 					<li class="vod-info"><span class="vod-info-list-tit">적립
 							마일리지</span> <span class="vod-info-list-txt view-class-mileage">최대
-							3,780p</span></li>
+							${classDetail.cl_price *0.1}p</span></li>
 					<li class="vod-info"><span class="vod-info-list-tit">배송비</span>
 						<span class="vod-info-list-txt">무료배송(도서산간지역 제외)</span></li>
 				</ul>
@@ -504,7 +504,7 @@
 				</div>
 			</div>
 		</div>
-</c:forEach>	
+<%-- </c:forEach>	 --%>
 	</div>
 	<!-- Modal -->
 	<div class="modal fade" id="cart" role="dialog">
@@ -538,16 +538,16 @@
 												<img src="https://s3.ap-northeast-2.amazonaws.com/staticdev.hobbyful.co.kr/product/146/b6f17010-3029-11ea-9134-2970db5a6784-resize.jpg">
 											</div>
 									</label></li>
-									<li><label>
+									<!-- <li><label>
 										<input type="radio" name="listIndex" value="1">
 											<div class="option-item">
 												<h5>클래스 수강권</h5>
 												<p class="prices">
-													<span class="sale">124,000원</span>
+													<span class="sale" id="price">124,000원</span>
 												</p>
 												<span class="desc">온라인 수강권(평생수강)</span>
 											</div>
-									</label></li>
+									</label></li> -->
 								</ul>
 							</article>
 						</div>

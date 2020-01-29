@@ -13,4 +13,5 @@ public interface ListMapper {
 	 "<if test='cl_num != null'> where cl_num=#{cl_num} </if></script>"})
 	List<Class> list(Map<String,Object> param);
 
+
 }

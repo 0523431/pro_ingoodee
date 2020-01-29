@@ -365,7 +365,7 @@ z-index 정리
 
 /* 로그인 */
 .login-wrap .float-wrap { position:relative; padding:0; }
-	.login-wrap .float-wrap:first-child { margin:10px 0 65px; }
+	.login-wrap .float-wrap:first-child { margin:10px 0 10px; }
 	.login-wrap .join-cont { width:650px; margin-left:-325px; box-shadow:0 12px 36px 0 rgba(0,0,0,0.3); }
 	.login-wrap .join-type-cont { float:left; }
 	.login-wrap .join-type-cont:last-child { float:right; }
@@ -376,7 +376,7 @@ z-index 정리
 	.login-keep  { padding:0; }
 	.keep-login { padding:16px 0 0; }
 	.label-keep-login { font-size:14px; }
-	.btn-login { width:95px; height:50px; font-size:14px; line-height:50px; }
+	.btn-login { width:100%; height:50px; font-size:14px; line-height:50px; }
 	.login-find-wrap { position:absolute; top:26px; right:27px; padding:0; background:none; }
 	.login-find:last-child { padding-left:10px; }
 	.btn-login-find { font-size:14px; }
@@ -1414,7 +1414,7 @@ z-index 정리
 
 .hfc-modal { overflow-y:scroll; }
 .hfc-modal .hfe-bg { position:fixed; top:0; left:0; right:0; bottom:0; /*background:#000; opacity:0.5;*/ }
-.hfc-modal.s-big .hfe-container { overflow-y:visible; max-height:100%; bottom:auto; width:100%; margin:5% auto; box-shadow:0 12px 36px 0 rgba(0,0,0,0.3); }
+.hfc-modal.s-big .hfe-container { overflow-y:visible; max-height:85%; bottom:auto; width:600px; margin:5% auto; box-shadow:0 12px 36px 0 rgba(0,0,0,0.3); }
 .hfc-modal .hfe-option { padding:30px; }
 .hfc-modal .hfe-option .option-item:hover::after { position:absolute; left:0; top:0; width:100%; height:100%; background: rgba(180, 119, 107, 0.05); content:''; }
 
@@ -1431,7 +1431,7 @@ z-index 정리
 .hfc-modal .hfe-orderinfo .i-price-sale .i-price-installment .i-num { font-size:20px; }
 
 
-.hfb-categorySlideList { padding:0 40px; margin:10px -40px 40px -40px; }
+.hfb-categorySlideList { /* padding:0 40px; */ margin:10px -40px 40px -40px; }
 .hfb-categorySlideList header h4 { font-size:22px; line-height:1.4; }
 .hfb-categorySlideList .f-nav { cursor:pointer; display:block; position:absolute; z-index:10; top:-75px; bottom:-45px; width:40px; background-color:#fff; background-size:12px; background-repeat:no-repeat; background-position:50% 50%; text-indent:-99999px; }
 .hfb-categorySlideList.s-hasdesc .f-nav { top:-75px; bottom:-70px; }

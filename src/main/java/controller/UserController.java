@@ -16,163 +16,162 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import exception.LoginException;
-import logic.Item;
-import logic.Sale;
-import logic.SaleItem;
+
+import logic.Mileage;
+import logic.Postaddr;
+
 import logic.ShopService;
+import logic.ShopService_pr;
 import logic.User;
 
-@Controller //@Component + Controller : ê°ì²´ë¥¼ ë§Œë“¤ê³  ì»¨íŠ¸ë¡¤ëŸ¬ì˜ ê¸°ëŠ¥ê¹Œì§€ ê°™ì´ ìˆ˜í–‰
+@Controller //@Component + Controller : °´Ã¼¸¦ ¸¸µé°í ÄÁÆ®·Ñ·¯ÀÇ ±â´É±îÁö °°ÀÌ ¼öÇà
 @RequestMapping("user") //user/xxx.shop
 public class UserController {
-	@Autowired
-	private ShopService service;
-	
-	
-	@GetMapping("*")
-	public String form(Model model) {
-		model.addAttribute(new User());
-		return null;
-	}
-	@PostMapping("userEntry")
-	public ModelAndView userEntry(@Valid User user,BindingResult bresult) throws Exception{
-		ModelAndView mav = new ModelAndView();
-		if(bresult.hasErrors()) {
-			bresult.reject("error.input.user");
-			mav.getModel().putAll(bresult.getModel());
-			return mav;
-		}
-		//useraccount í…Œì´ë¸”ì— ë‚´ìš© ë“±ë¡. ë·°ë‹¨ì€ login.jspë¡œ ì´ë™
-		try {
-			service.userInsert(user);
-			//mav.setViewName("redirect:main.shop");
-			mav.setViewName("user/login"); //redirect ë¥¼ ì‚¬ìš©í•˜ë©´ ì•„ì´ë””ê°’ì´ ë“¤ì–´ê°€ì§€ ì•ŠìŒ
-		}catch(DataIntegrityViolationException e) {
-			e.printStackTrace();
-			bresult.reject("error.duplicate.user");
-		}
-		return mav;
-	}
-	@PostMapping("login")
-	public ModelAndView login(@Valid User user,BindingResult bresult,HttpSession session) throws Exception{
-		ModelAndView mav = new ModelAndView();
-		if(bresult.hasErrors()) {
-			bresult.reject("error.login.user");
-			mav.getModel().putAll(bresult.getModel());
-			return mav;
-		}
-		try {
-			User dbUser = service.getUser(user.getEmailid());
-			if(!dbUser.getPass().equals(user.getPass())) {
-				bresult.reject("error.login.pass");
-				return mav;
-			}else {
-				session.setAttribute("loginUser",dbUser);
-				mav.setViewName("redirect:main.shop");
-			}
-		}catch(EmptyResultDataAccessException e) {
-			e.printStackTrace();
-			bresult.reject("error.login.id");
-		}
-		return mav;
-	}
-
-	
-	@RequestMapping("logout")
-	public String logout(HttpSession session) {
-		session.invalidate();
-		return "redirect:login.shop";
-	}
-	
-	@RequestMapping("main") //UserLoginAspect í´ë˜ìŠ¤ì— í•´ë‹¹í•˜ëŠ” í•µì‹¬ë¡œì§
-	public String checkmain() { //sessionì„ ë°›ì§€ ì•Šìœ¼ë©´ ë¡œê·¸ì¸ì•ˆí•œì‚¬ëŒë„ ì ‘ê·¼ê°€ëŠ¥
-		return "user/main";
-	}
-	
-	//ë¡œê·¸ì¸ ê²€ì¦, (ë¡œê·¸ì¸ ì •ë³´ != íŒŒë¼ë¯¸í„°ì •ë³´ ì ‘ê·¼ ë¶ˆê°€, adminì€ ê°€ëŠ¥)
-	@RequestMapping("mypage")
-	public ModelAndView page(String id,HttpSession session) {
-		ModelAndView mav = new ModelAndView();
-		/*
-		User user = service.getUser(id); //loginuserë¥¼ ì“¸ ìˆ˜ ì—†ìŒ adminì¸ê²½ìš° íŒŒë¼ë¯¸í„°ì— í•´ë‹¹í•˜ëŠ” id ì¡°íšŒ
-		//ì‚¬ìš©ìê°€ ì£¼ë¬¸í•œ ëª¨ë“  ì£¼ë¬¸ë‚´ì—­ ì¡°íšŒ
-		List<Sale> salelist = service.salelist(id);
-		for(Sale sa : salelist) {
-			//ì£¼ë¬¸ë²ˆí˜¸ì— í•´ë‹¹í•˜ëŠ” ì£¼ë¬¸ ìƒí’ˆë‚´ì—­ ì¡°íšŒ
-			//dbì— ì™¸ë˜í‚¤ í•„ìš”í•¨
-			List<SaleItem> saleitemlist = service.saleItemList(sa.getSaleid());
-			for(SaleItem si : saleitemlist) {
-				//ì£¼ë¬¸ìƒí’ˆ í•œê°œì— í•´ë‹¹í•˜ëŠ” Item ì¡°íšŒ
-				Item item = service.getItem(si.getItemid());
-				si.setItem(item);
-			}
-			sa.setItemList(saleitemlist);
-		}
-		mav.addObject("user",user);
-		mav.addObject("salelist",salelist);
-		 */
-		return mav;
-	}
-	
-	//delete.shopê³¼ update.shopì—ì„œë§Œ ì‚¬ìš©í•  ìˆ˜ ìˆê²Œ ìˆ˜ì • : * ëŠ” ìƒê´€ì—†ì´ ëª¨ë‘ ì‚¬ìš©
-	@GetMapping(value= {"update","delete"}) //íšŒì›ì •ë³´ìˆ˜ì •í™”ë©´,íƒˆí‡´í™•ì¸í™”ë©´
-	public ModelAndView checkview(String id,HttpSession session) {
-		ModelAndView mav = new ModelAndView();
-		User user = service.getUser(id);
-		mav.addObject("user", user);
-		return mav;
-	}
-	
-	@PostMapping("update")//íšŒì›ì •ë³´ ìˆ˜ì • ëˆŒë €ì„ì‹œ
-	public ModelAndView checkupdate(@Valid User user, BindingResult bresult,HttpSession session) {
-		ModelAndView mav = new ModelAndView();
-		if(bresult.hasErrors()) {
-			bresult.reject("error.input.user");
-			return mav;
-		}
-		//ë¹„ë°€ë²ˆí˜¸ ê²€ì¦ : ì…ë ¥ëœ ë¹„ë°€ë²ˆí˜¸ , dbì— ë“±ë¡ëœ ë¹„ë°€ë²ˆí˜¸ ë¹„êµ
-		// ì¼ì¹˜:update
-		// ë¶ˆì¼ì¹˜:ë©”ì„¸ì§€ë¥¼ ìœ íš¨ì„±ì¶œë ¥ìœ¼ë¡œ í™”ë©´ì— ì¶œë ¥
-		User loginUser = (User)session.getAttribute("loginUser");//adminì¸ì§€ í™•ì¸í•˜ê¸° ìœ„í•´
-		if(!user.getPass().equals(loginUser.getPass())){
-			bresult.reject("error.login.password");
-			return mav;
-		}
-		try{
-			service.userupdate(user);
-			mav.setViewName("redirect:mypage.shop?id="+user.getEmailid());
-			if(!loginUser.getEmailid().equals("admin")) {
-				session.setAttribute("loginUser", user); //ì—…ë°ì´íŠ¸ í–ˆì„ë•Œ loginì •ë³´ë„ ë°”ê¿”ì¤Œ
-			}
-		}catch(Exception e) {
-			e.printStackTrace();
-			bresult.reject("error.user.update");
-		}
-		return mav;
-	}
-	
-	//ê´€ë¦¬ìë„ ê°•ì œíƒˆí‡´ê°€ëŠ¥í•´ì•¼í•¨, ìœ íš¨ì„± ê²€ì¦ í•˜ì§€ì•Šì•˜ìŒ
-	@PostMapping("delete")//		 userë¥¼ ë°›ì•„ì™€ë„ ë˜ê³ , String id, String passwordë¡œ ë°›ì•„ì™€ë„ ë¨
-	public ModelAndView checkdelete(User user , HttpSession session) {
-		ModelAndView mav = new ModelAndView();
-		User loginUser = (User)session.getAttribute("loginUser");
-		if(!user.getPass().equals(loginUser.getPass())){
-			throw new LoginException("ë¹„ë°€ë²ˆí˜¸ê°€ í‹€ë¦½ë‹ˆë‹¤.","delete.shop?id="+user.getEmailid());
-		}
-		try {
-			service.userDelete(user.getEmailid());
-			if(loginUser.getEmailid().equals("admin")) {
-				mav.setViewName("redirect:/admin/list.shop");
-			}else {
-				session.invalidate();
-				mav.addObject("msg",user.getEmailid()+"íšŒì›ë‹˜. íƒˆí‡´ ë˜ì—ˆìŠµë‹ˆë‹¤.");
-				mav.addObject("url","login.shop");
-				mav.setViewName("alert");
-			}
-		}catch(Exception e) {
-			e.printStackTrace();
-			throw new LoginException("íšŒì› íƒˆí‡´ì‹œ ì˜¤ë¥˜ê°€ ë°œìƒí–ˆìŠµë‹ˆë‹¤. ì „ì‚°ë¶€ ì—°ë½ ìš”ë§","delete.shop?id="+user.getEmailid());
-		}
-		return mav;
-	}
+   @Autowired
+   private ShopService service;
+   
+   @Autowired
+   private ShopService_pr service_pr;
+   
+   
+   @GetMapping("*")
+   public String form(Model model) {
+      model.addAttribute(new User());
+      return null;
+   }
+   @PostMapping("userEntry")
+   public ModelAndView userEntry(@Valid Mileage mileage, User user, BindingResult bresult, HttpSession session) throws Exception{
+      ModelAndView mav = new ModelAndView();
+      if(bresult.hasErrors()) {
+         bresult.reject("error.input.user");
+         mav.getModel().putAll(bresult.getModel());
+         return mav;
+      }
+      //useraccount Å×ÀÌºí¿¡ ³»¿ë µî·Ï. ºä´ÜÀº login.jsp·Î ÀÌµ¿
+      try {
+         service.userInsert(user);
+         /* service.mileageInsert(mileage, user.getEmailid(), "È¸¿ø°¡ÀÔ Æ÷ÀÎÆ®", 4000); */
+         User dbUser = service.getUser(user.getEmailid());
+         session.setAttribute("loginUser",dbUser);
+         mav.setViewName("redirect:main.shop");
+         /* service.mileageupdate(dbUser.getEmailid()); */
+         // mav.setViewName("user/login"); //redirect ¸¦ »ç¿ëÇÏ¸é ¾ÆÀÌµğ°ªÀÌ µé¾î°¡Áö ¾ÊÀ½
+      }catch(DataIntegrityViolationException e) {
+         e.printStackTrace();
+         bresult.reject("error.duplicate.user");
+      }
+      return mav;
+   }
+   @PostMapping("login")
+   public ModelAndView login(User user,BindingResult bresult,HttpSession session) throws Exception{
+      ModelAndView mav = new ModelAndView();
+      try {
+         User dbUser = service.getUser(user.getEmailid());
+         if(!dbUser.getPass().equals(user.getPass())) {
+            bresult.reject("error.login.pass");
+            return mav;
+         }else {
+            session.setAttribute("loginUser",dbUser);
+            mav.setViewName("redirect:main.shop");
+         }
+      }catch(EmptyResultDataAccessException e) {
+         e.printStackTrace();
+         bresult.reject("error.login.id");
+      }
+      return mav;
+   }
+   
+   @RequestMapping("logout")
+   public String logout(HttpSession session) {
+      session.invalidate();
+      return "redirect:main.shop";
+   }
+   
+   @RequestMapping("main") //UserLoginAspect Å¬·¡½º¿¡ ÇØ´çÇÏ´Â ÇÙ½É·ÎÁ÷
+   public String checkmain() { //sessionÀ» ¹ŞÁö ¾ÊÀ¸¸é ·Î±×ÀÎ¾ÈÇÑ»ç¶÷µµ Á¢±Ù°¡´É
+      return "user/main";
+   }
+   
+   //·Î±×ÀÎ °ËÁõ, (·Î±×ÀÎ Á¤º¸ != ÆÄ¶ó¹ÌÅÍÁ¤º¸ Á¢±Ù ºÒ°¡, adminÀº °¡´É)
+   @RequestMapping("mypage")
+   public ModelAndView page(String id, HttpSession session) {
+      ModelAndView mav = new ModelAndView();
+      User user = service.getUser(id);
+      mav.addObject("user", user);
+      mav.addObject(new Postaddr()); // ºó °´Ã¼¸¦ Àü´Ş
+      
+      // µî·ÏÇÑ ¹è¼ÛÁö ¸ñ·Ï Á¶È¸
+      List<Postaddr> postList = service_pr.postList(user.getEmailid());
+      System.out.println("user.getEmailid() = "+user.getEmailid());
+      mav.addObject("postList", postList);
+      
+      // ¹è¼ÛÁö °³¼ö
+      int postListCnt= service_pr.postListCnt(user.getEmailid());
+      System.out.println(postListCnt);
+      mav.addObject("postListCnt", postListCnt);
+      
+      return mav;
+   }
+   
+   //delete.shop°ú update.shop¿¡¼­¸¸ »ç¿ëÇÒ ¼ö ÀÖ°Ô ¼öÁ¤ : * ´Â »ó°ü¾øÀÌ ¸ğµÎ »ç¿ë
+   @GetMapping(value= {"update","delete"}) //È¸¿øÁ¤º¸¼öÁ¤È­¸é,Å»ÅğÈ®ÀÎÈ­¸é
+   public ModelAndView checkview(String id,HttpSession session) {
+      ModelAndView mav = new ModelAndView();
+      User user = service.getUser(id);
+      mav.addObject("user", user);
+      return mav;
+   }
+   
+   @PostMapping("update")//È¸¿øÁ¤º¸ ¼öÁ¤ ´­·¶À»½Ã
+   public ModelAndView checkupdate(@Valid User user, BindingResult bresult,HttpSession session) {
+      ModelAndView mav = new ModelAndView();
+      if(bresult.hasErrors()) {
+         bresult.reject("error.input.user");
+         return mav;
+      }
+      //ºñ¹Ğ¹øÈ£ °ËÁõ : ÀÔ·ÂµÈ ºñ¹Ğ¹øÈ£ , db¿¡ µî·ÏµÈ ºñ¹Ğ¹øÈ£ ºñ±³
+      // ÀÏÄ¡:update
+      // ºÒÀÏÄ¡:¸Ş¼¼Áö¸¦ À¯È¿¼ºÃâ·ÂÀ¸·Î È­¸é¿¡ Ãâ·Â
+      User loginUser = (User)session.getAttribute("loginUser");//adminÀÎÁö È®ÀÎÇÏ±â À§ÇØ
+      if(!user.getPass().equals(loginUser.getPass())){
+         bresult.reject("error.login.password");
+         return mav;
+      }
+      try{
+         service.userupdate(user);
+         mav.setViewName("redirect:mypage.shop?id="+user.getEmailid());
+         if(!loginUser.getEmailid().equals("admin")) {
+            session.setAttribute("loginUser", user); //¾÷µ¥ÀÌÆ® ÇßÀ»¶§ loginÁ¤º¸µµ ¹Ù²ãÁÜ
+         }
+      }catch(Exception e) {
+         e.printStackTrace();
+         bresult.reject("error.user.update");
+      }
+      return mav;
+   }
+   
+   //°ü¸®ÀÚµµ °­Á¦Å»Åğ°¡´ÉÇØ¾ßÇÔ, À¯È¿¼º °ËÁõ ÇÏÁö¾Ê¾ÒÀ½
+   @PostMapping("delete")//       user¸¦ ¹Ş¾Æ¿Íµµ µÇ°í, String id, String password·Î ¹Ş¾Æ¿Íµµ µÊ
+   public ModelAndView checkdelete(User user , HttpSession session) {
+      ModelAndView mav = new ModelAndView();
+      User loginUser = (User)session.getAttribute("loginUser");
+      if(!user.getPass().equals(loginUser.getPass())){
+         throw new LoginException("ºñ¹Ğ¹øÈ£°¡ Æ²¸³´Ï´Ù.","delete.shop?id="+user.getEmailid());
+      }
+      try {
+         service.userDelete(user.getEmailid());
+         if(loginUser.getEmailid().equals("admin")) {
+            mav.setViewName("redirect:/admin/list.shop");
+         }else {
+            session.invalidate();
+            mav.addObject("msg",user.getEmailid()+"È¸¿ø´Ô. Å»Åğ µÇ¾ú½À´Ï´Ù.");
+            mav.addObject("url","login.shop");
+            mav.setViewName("alert");
+         }
+      }catch(Exception e) {
+         e.printStackTrace();
+         throw new LoginException("È¸¿ø Å»Åğ½Ã ¿À·ù°¡ ¹ß»ıÇß½À´Ï´Ù. Àü»êºÎ ¿¬¶ô ¿ä¸Á","delete.shop?id="+user.getEmailid());
+      }
+      return mav;
+   }
 }

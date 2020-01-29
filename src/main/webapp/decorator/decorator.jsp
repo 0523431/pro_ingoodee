@@ -6,12 +6,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-
 <!-- 클래스 신청하기 모달 라이브러리 -->
 <!-- DETAIL Modal -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> -->
 <script type="text/javascript" src="http://code.jquery.com/jquery-3.2.1.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
 
 	<meta name="description" content="취미로운 일상을 제안하는 온라인 취미 클래스. 취미 배달, 취미 정기구독">
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -28,11 +27,6 @@
 	<link type="text/css" rel="stylesheet" href="${path}/css/style_effect.css">
 	<link type="text/css" rel="stylesheet" href="${path}/css/style_responsible.css">
 	<link type="text/css" rel="stylesheet" href="${path}/css/style_nalrarang.css">
-	<meta name="naver-site-verification" content="naver9a1242e74229715560a0c5c0e9c18eca">
-	<meta property="og:url" content="https://hobbyful.co.kr">
-	<meta property="og:title" content="하비풀 - 취미를 만나 일상이 아름다워지다.">
-	<meta property="og:description" content="취미로운 일상을 제안하는 온라인 취미 클래스. 하비풀은 당신과 취미를 만나게 합니다.">
-	<meta property="og:image" content="https://s3.ap-northeast-2.amazonaws.com/staticdev.hobbyful.co.kr/hobbyful_concept01.jpg">
 	
 	<link rel="shortcut icon" href="${path}/img/favicon.png">
 	<link rel="apple-touch-icon" href="${path}/img/m_favicon.png">
@@ -138,7 +132,7 @@
 						</li>
 						<!-- #login 모달창 찾기!!!!!!!!!!!!! -->
 						<li class="gnb gnb-mypage">
-							<a href="${path}/user/mypage.shop" title="마이페이지" class="btn-gnb header_mypage">마이페이지</a>
+							<a href="${path}/user/mypage.shop?emailid=${loginUser.emailid}" title="마이페이지" class="btn-gnb header_mypage">마이페이지</a>
 						</li>
 						<li class="gnb gnb-customer">
 							<a href="/customer.html" title="고객센터" class="btn-gnb">고객센터</a>

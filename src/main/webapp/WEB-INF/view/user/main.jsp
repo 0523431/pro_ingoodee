@@ -5,7 +5,6 @@
 <html>
 <head lang="ko" id="hobbyful">
 <title>hability :-D 취미를만나일상이아름다워지다</title>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
 <!-- <link rel="stylesheet" type="text/css" media="screen" href="CSSreset.min.css" /> -->
 <link rel="stylesheet" type="text/css" media="screen" href="${path}/recoSlide/als_demo.css" />
@@ -62,12 +61,12 @@
   
 	$(document).ready(function() {
 		$("#lista1").als({
-			visible_items : 3,
+			visible_items : 4,
 			scrolling_items : 1,
 			orientation : "horizontal",
 			circular : "yes",
 			autoscroll : "no",
-			interval : 5000,
+			interval : 3000,
 			speed : 500,
 			easing : "linear",
 			direction : "right",
@@ -77,7 +76,7 @@
 	
 	$(document).ready(function() {
 		$("#lista2").als({
-			visible_items : 3,
+			visible_items : 4,
 			scrolling_items : 1,
 			orientation : "horizontal",
 			circular : "yes",
@@ -168,9 +167,10 @@
 	</div>
 	
 	<!-- 추천 리스트 시작 -->
-	<div id="recommendSlideList">
+	<div id="recommendSlideList" style="padding-left: 0px; padding-right: 0px;">
 		<!-- BEST 지금 가장 인기있는 취미  -->
-		<section id="content" class="hfb-categorySlideList hf-tracker-group swiper-container-initialized swiper-container-horizontal">
+		<section id="content" class="hfb-categorySlideList hf-tracker-group swiper-container-initialized swiper-container-horizontal"
+		 style="width: 1300px;">
 			<header>
 				<h4>BEST 지금 가장 인기있는 취미</h4>
 			</header>
@@ -250,8 +250,9 @@
 		</section>
 		
 		<!-- BEST 지금 가장 인기있는 취미  -->
-		<section id="content" class="hfb-categorySlideList hf-tracker-group swiper-container-initialized swiper-container-horizontal">
-			<header>
+		<section id="content" class="hfb-categorySlideList hf-tracker-group swiper-container-initialized swiper-container-horizontal"
+		 style="width: 1300px;">
+		 	<header>
 				<h4>새로운 클래스 리스트 테스트</h4>
 			</header>
 	
