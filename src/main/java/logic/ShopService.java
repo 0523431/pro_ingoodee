@@ -20,7 +20,6 @@ public class ShopService {
 	@Autowired
 	private ListDao listDao;
 
-
 	public void userInsert(User user) {
 		userDao.insert(user);
 	}
@@ -95,6 +94,10 @@ public class ShopService {
 		kit.setKit_num(++max);
 		kit.setCl_num(cl_num);
 		listDao.kitinsert(kit);
+	}
+
+	public List<Kit> kitList(int cl_num) {
+		return listDao.kitList(cl_num);
 	}
 
 }

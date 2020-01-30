@@ -51,6 +51,7 @@ public class UserDao {
 	
 	// 성공
 	public User selectOne(String emailid) {
+		System.out.println("userDao = "+emailid);
 		param.clear();
 		param.put("emailid",emailid);
 		List<User> list = sqlSession.getMapper(UserMapper.class).select(param);

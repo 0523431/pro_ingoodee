@@ -27,5 +27,8 @@ public interface ListMapper {
 	
 	@Select("select ifnull(max(kit_num),0) from kit")
 	int kitnum();
+	
+	@Select("select * from kit where cl_num=#{cl_num}")
+	List<Kit> kitList(Map<String, Object> param);
 
 }
