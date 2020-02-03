@@ -10,6 +10,7 @@ import org.springframework.web.servlet.ModelAndView;
 import logic.Class;
 import logic.Kit;
 import logic.ShopService;
+import logic.User;
 
 @Controller
 @RequestMapping("list")
@@ -36,12 +37,14 @@ public class ListController {
    @RequestMapping("detail")
    public ModelAndView detail(int cl_num) {
       ModelAndView mav = new ModelAndView();
+            
       // 세부정보 넘겨줌
       Class classDetail = service.classDetail(cl_num);
       
       // 옵션값 넘겨줌
       List<Kit> kitList = service.kitList(cl_num);
-//      classDetail.setOption(kitList);
+      // 옵션 개수
+      mav.addObject("kitcnt", kitList.size());      
       mav.addObject("classDetail",classDetail);
       mav.addObject("kitList", kitList);
       return mav;
