@@ -23,7 +23,7 @@
 				$("#"+i).toggle();
 			} else $('#'+i).css('display', 'none');
 		} */
- 		if(val == '1') {
+ 		/* if(val == '1') {
 			$('#1').css('display', 'block');
 			$('#2').css('display', 'none');
 			$('#3').css('display', 'none');
@@ -35,6 +35,14 @@
 			$('#1').css('display', 'none');
 			$('#2').css('display', 'none');
 			$('#3').css('display', 'block');
+		} */
+
+		for(var i=1; i<=10000000; i++) {
+			if(val == i) {
+				$('#'+i).css('display', 'block');
+				var sel_option = $('#'+i);
+				$('.option').not(sel_option).css('display', 'none');
+			}
 		}
 	}
 </script>
@@ -524,6 +532,7 @@
 	<!-- Modal -->
 	<form:form name="modal_form" action="../order/order_write.shop" method="post">
 	<input type="hidden" value="${classDetail.cl_num}" name="cl_num" id="cl_num">
+	<input type="hidden" name="buyingtype" value="0">
 	<div class="modal fade" id="option" role="dialog" style="display:none">
 	<div id="dimmer-hf-modal-1580289583484809" class="hfc-dimmer hfc-dimmer-modal"></div>
 		<div class="modal-dialog hfc-modal s-big" style="overflow: unset;">
@@ -546,7 +555,7 @@
 									<!-- forEach 필요 -->
 									<c:forEach var="kit" items="${kitList}">
 									<li><label>
-										<input type="radio" <%-- id="${kit.kit_num}" --%> name="kit_num" class="kit_num" value="${kit.kit_num}" onClick="javascript:selectRadio(this.value);">
+										<input type="radio" name="kit_num" class="kit_num" value="${kit.kit_num}" onClick="javascript:selectRadio(this.value);">
 											<div class="option-item">
 												<h5>${kit.kit_name}</h5>
 												<p class="prices">
@@ -563,11 +572,16 @@
 					</section>				
 				<footer>
 					<script>
+						function addComma(num) {
+						  var regexp = /\B(?=(\d{3})+(?!\d))/g;
+						  return num.toString().replace(regexp, ',');
+						}
+						
 						var kitcnt = '<c:out value="${kitcnt}" />';
 						
 						function form_btn(kit_num,kit_price,n) {
 							var quantity = document.getElementById("count"+kit_num);
-							console.log(quantity);
+							console.log("detail = "+quantity);
 							quan_value = parseInt(quantity.value);
 							console.log(quan_value);
 							quan_value +=n;
@@ -579,9 +593,9 @@
 							}
 							
 							if(quantity.value ==1) {
-								$("#totalprice"+kit_num).text(kit_price);
+								$("#totalprice"+kit_num).text(addComma(kit_price)+"원");
 							} else {
-								$("#totalprice"+kit_num).text(kit_price * quan_value);
+								$("#totalprice"+kit_num).text(addComma(kit_price * quan_value)+"원");
 							}
 							return false;							
 						}
@@ -603,18 +617,22 @@
 						
 						// 장바구니
 						function basketAdd() {
-							alert("반응하니?");
+							
 							f = document.modal_form;
+							if(f.kit_num.value == "") {
+								alert("원하는 구성품을 먼저 선택해 주세요.");
+								return false;
+							}
 							var data = {"lastcount":$(".lastcount").val(), "cl_num":$("#cl_num").val(), "kit_num":f.kit_num.value, "emailid":$(".emailid").val()};
-							console.log(data);
+							alert("장바구니 담기 반응하니?");
+							$(".basketAddCheck").show();
+							
 							$.ajax({
 								type : "POST",
-								// 요청한 url
 								url : "../ajax/basketAddCheck.shop",
 								data : data,
 								success : function(data) {
-									// 새창 띄우기..?
-									$(".basketAddCheck").html(data);
+									$("#basketAddCheck").html(data);
 								}
 							})
 						}
@@ -623,7 +641,7 @@
 					<input type="hidden" class="emailid" name="emailid" value="${sessionScope.loginUser.emailid}">
 					<input type="hidden" class="lastkit" name="lastkit" value="">
 					<c:forEach var="kit" items="${kitList}">
-					<div id="${kit.kit_num}" style="display:none">
+					<div id="${kit.kit_num}" class="option" style="display:none">
 						<div  class="hfe-orderinfo s-installment">
 						<div class="i-names">${kit.kit_name}</div>
 						<div class="i-quantity">
@@ -640,20 +658,17 @@
 						</div>
 					</div>
 					</c:forEach>
-					<div>${sessionScope.loginUser.emailid}</div>
 					<div class="hfe-btn-group s-twin">
 						<button class="hfe-btn s-w5 a-cart" type="button" onclick="basketAdd()">장바구니 담기</button>
-						<%-- <button class="hfe-btn s-w5 a-buy s-active" onclick="location.href='order_write.shop?emailid=${sessionScope.loginUser.emailid}'">바로 신청하기</button> --%>
 						<button class="hfe-btn s-w5 a-buy s-active" type="button" onclick="order_write()">바로 신청하기</button>
 					</div>
-					
+					<div class="modal fade basketAddCheck" id="basketAddCheck" role="dialog" style="display:none; zindex:1000;"></div>
 				</footer>
 			
 			</div>
 		</div>
 	</div>
+	
 	</form:form>
-	<div class="modal fade basketAddCheck" id="cart" role="dialog" style="display:none">
-	</div>
 </body>
 </html>

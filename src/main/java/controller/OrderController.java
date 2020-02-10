@@ -1,5 +1,8 @@
 package controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import logic.Basket;
 import logic.Class;
 import logic.Kit;
 import logic.ShopService;
@@ -47,24 +51,37 @@ public class OrderController {
 //		return mav;
 //	}
 	
-	// 옵션에서 바로 구매
-	@RequestMapping("order_write")
-	public ModelAndView order_write(String kit_num, int cl_num, @RequestParam("lastcount") Integer count, HttpSession session) {
+	// 구매하기
+	@PostMapping("order_write")
+	public ModelAndView order_write(int buyingtype, int[] kit_num, int[] cl_num, @RequestParam("lastcount") Integer[] count, HttpSession session) {
 		ModelAndView mav = new ModelAndView("order/order_write");
-
-		System.out.println("order_write class = "+cl_num);
-		System.out.println("order_write kit = "+kit_num);
-		System.out.println("order_write count = "+count);
+		User loginUser = (User)session.getAttribute("loginUser");
 		
-		// 선택된 상품 객체(옵션)
-		Kit kitDetail = service_pr.kitInfo(kit_num, cl_num);
-		System.out.println(kitDetail);
-		Class classDetail = service.classDetail(cl_num);
-		System.out.println(classDetail);
-		mav.addObject("kitDetail", kitDetail);
-		mav.addObject("count", count);
-		mav.addObject("classDetail", classDetail);
-//		mav.setViewName("redirect:../order/order_write.shop");
+		List<Basket> basketList = service_pr.basketList(loginUser.getEmailid());
+		if(buyingtype ==0) { // 옵션
+			for(int i=0; i<1; i++) {
+				// 우선 장바구니에 넣고
+				service_pr.basketAdd(kit_num[i], cl_num[i], count[i], loginUser.getEmailid());
+				// 읽어오자
+				basketList = service_pr.basketList(loginUser.getEmailid());
+				
+				Kit kitDetail = service_pr.kitInfo(kit_num[i], cl_num[i]);
+				Class classDetail = service.classDetail(cl_num[i]);
+				basketList.get(i).setCls(classDetail);
+				basketList.get(i).setKit(kitDetail);
+			}
+		} else if(buyingtype ==1) { // 장바구니
+			for(int i=0; i<cl_num.length; i++) {
+				System.out.println("장바구니 구매 class = "+cl_num[i]);
+				System.out.println("장바구니 구매 kit = "+kit_num[i]);
+				System.out.println("장바구니 구매 count = "+count[i]);
+				Kit kitDetail = service_pr.kitInfo(kit_num[i], cl_num[i]);
+				Class classDetail = service.classDetail(cl_num[i]);
+				basketList.get(i).setCls(classDetail);
+				basketList.get(i).setKit(kitDetail);
+			}
+		}
+		mav.addObject("blist", basketList);
 		return mav;
 	}
 	

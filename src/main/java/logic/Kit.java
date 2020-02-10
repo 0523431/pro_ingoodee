@@ -1,6 +1,8 @@
 package logic;
 
-public class Kit {
+import java.io.Serializable;
+
+public class Kit  implements Serializable {
 	private int kit_num;
 	private int cl_num;
 	private String kit_name;

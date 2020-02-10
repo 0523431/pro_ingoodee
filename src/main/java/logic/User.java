@@ -29,6 +29,10 @@ public class User {
 	private String address;
 	private String grade;
 	private String userimg;
+	
+	// list로 basket을 가져와?
+	
+	
 	public String getEmailid() {
 		return emailid;
 	}
