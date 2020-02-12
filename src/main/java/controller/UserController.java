@@ -191,10 +191,17 @@ public class UserController {
 		session.invalidate();
 		return "redirect:main.shop";
 	}
-	
-	@RequestMapping("main") //UserLoginAspect 클래스에 해당하는 핵심로직
-	public String checkmain() { //session을 받지 않으면 로그인안한사람도 접근가능
-		return "user/main";
+
+	@RequestMapping("main")
+	public ModelAndView newClassList() {
+		ModelAndView mav = new ModelAndView();
+		
+		List<Class> classList = service.classList(1);
+		mav.addObject("classList",classList);
+		
+		List<Class> diyList = service.classList(2);
+		mav.addObject("diyList",diyList);
+		return mav;
 	}
 	
 	//로그인 검증, (로그인 정보 != 파라미터정보 접근 불가, admin은 가능)
@@ -226,27 +233,35 @@ public class UserController {
 		System.out.println("배송지 개수 = "+postListCnt);
 		mav.addObject("postListCnt", postListCnt);
 		
+		int lastprice =0;
+		
 		// 주문 목록 조회
 		// 관리자일 경우 모든 내역 조회 가능
-		List<Uorder> orderList = service_pr.orderList(emailid);
-		for(Uorder order : orderList) {
-			List<Orderlist> orderClassList = service_pr.orderClassList(order.getOd_num());
-			for(Orderlist list : orderClassList) {
+		int od_num =0;
+		List<Uorder> orderList = service_pr.orderList(emailid, od_num);
+		for(Uorder oneorder : orderList) {
+			// 주문리스트 1개에서 주문번호를 가지고 상품 리스트를 만들어
+			List<Orderlist> itemList = service_pr.orderClassList(oneorder.getOd_num());
+			for(Orderlist oneitem : itemList) {
 				// 주문내역 1개에 해당하는 class 조회
-				Class cls = service.classDetail(list.getCl_num());
-				Kit kit = service_pr.kitInfo(list.getKit_num(), list.getCl_num());
-				list.setCls(cls);
-				list.setKit(kit);
+				Class cls = service.classDetail(oneitem.getCl_num());
+				Kit kit = service_pr.kitInfo(oneitem.getKit_num(), oneitem.getCl_num());
+				oneitem.setCls(cls);
+				oneitem.setKit(kit);
+				
+				lastprice += kit.getKit_price() * oneitem.getCount();
 			}
-			order.setOrderlist(orderClassList);
+			oneorder.setOrderlist(itemList);
 			// Sale에 있는 User에 사용자정보(값) 넣어주기
 			try {
-				User username = service.getUser(order.getEmailid());
-				order.setUser(username); // sale은 salelist에 저장되게 됨
+				User username = service.getUser(oneorder.getEmailid());
+				oneorder.setUser(username);
 			} catch (LoginException e) {
 				// 탈퇴한 회원이 있을 경우
 			}
 		}
+		mav.addObject("orderList", orderList);
+		mav.addObject("lastprice", lastprice);
 		
 		// 주문 개수
 		int orderListCnt = service_pr.orderListCnt(user.getEmailid());
@@ -317,4 +332,6 @@ public class UserController {
 		}
 		return mav;
 	}
+	
+
 }

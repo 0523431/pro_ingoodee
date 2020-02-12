@@ -1,6 +1,15 @@
 package logic;
 
 public class Basket {
+	private int b_num;
+	
+	public int getB_num() {
+		return b_num;
+	}
+	public void setB_num(int b_num) {
+		this.b_num = b_num;
+	}
+
 	private String emailid;
 	private int cl_num;
 	private int kit_num;

@@ -69,9 +69,10 @@ public class OrderController {
 				Class classDetail = service.classDetail(cl_num[i]);
 				basketList.get(i).setCls(classDetail);
 				basketList.get(i).setKit(kitDetail);
+				
+				lastsum += count[i] * kitDetail.getKit_price();
 			}
 		} else if(buyingtype ==1) { // 장바구니
-			
 			for(int i=0; i<cl_num.length; i++) {
 				System.out.println("장바구니 구매 class = "+cl_num[i]);
 				System.out.println("장바구니 구매 kit = "+kit_num[i]);

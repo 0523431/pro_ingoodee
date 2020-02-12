@@ -6,7 +6,7 @@ public class Orderlist {
 	private int kit_num;
 	private int count;
 	
-	// db에서는 필요없음
+	// db에서는 필요없고 정보를 주기 위해서
 	private Kit kit;
 	private Class cls;
 	

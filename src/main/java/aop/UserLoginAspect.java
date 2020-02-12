@@ -16,25 +16,25 @@ import logic.User;
 @Aspect
 @Order(1)
 public class UserLoginAspect {
-	@Around("execution(* controller.User*.page(..)) && args(.., session)")
-	public Object userLoginCheck_mypage(ProceedingJoinPoint joinPoint, HttpSession session) throws Throwable {
-		User loginUser = (User) session.getAttribute("loginUser");
-		if (loginUser == null) {
-			throw new LoginException("로그인 후 거래하세요", "");
-		}
-		Object ret = joinPoint.proceed();
-		return ret;
-	}
-	
-	@Around("execution(* controller.Pooh*.*(..)) && args(.., session)")
-	public Object userLoginCheck_pooh(ProceedingJoinPoint joinPoint, HttpSession session) throws Throwable {
-		User loginUser = (User) session.getAttribute("loginUser");
-		if (loginUser == null) {
-			throw new LoginException("로그인 후 거래하세요", "");
-		}
-		Object ret = joinPoint.proceed();
-		return ret;
-	}
+//	@Around("execution(* controller.User*.page(..)) && args(.., session)")
+//	public Object userLoginCheck_mypage(ProceedingJoinPoint joinPoint, HttpSession session) throws Throwable {
+//		User loginUser = (User) session.getAttribute("loginUser");
+//		if (loginUser == null) {
+//			throw new LoginException("로그인 후 거래하세요", "");
+//		}
+//		Object ret = joinPoint.proceed();
+//		return ret;
+//	}
+//	
+//	@Around("execution(* controller.Pooh*.*(..)) && args(.., session)")
+//	public Object userLoginCheck_pooh(ProceedingJoinPoint joinPoint, HttpSession session) throws Throwable {
+//		User loginUser = (User) session.getAttribute("loginUser");
+//		if (loginUser == null) {
+//			throw new LoginException("로그인 후 거래하세요", "");
+//		}
+//		Object ret = joinPoint.proceed();
+//		return ret;
+//	}
 
 //	@Around //advice : 핵심로직 전,후
 //		("execution(* controller.User*.check*(..)) && args(.., session)")

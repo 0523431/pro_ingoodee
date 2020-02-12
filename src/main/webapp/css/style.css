@@ -774,7 +774,7 @@ z-index 정리
 .order-list .area-content li.i-name { }
 .order-list .area-content li.i-option { color: #b6b6b6; font-size:11px; }
 .order-list .area-content li.i-status { color:#d67061; }
-.order-list .area-content li.i-status { position:absolute; bottom:5px; right:0; color:#d67061; }
+.order-list .area-content li.i-status { position:absolute; bottom:5px; right:0; color:#11447B; }
 .order-list .area-content li.i-qty { position:absolute; bottom:5px; left:70px; color: #b6b6b6; font-size:11px; }
 
 
@@ -804,10 +804,10 @@ z-index 정리
 	.return-info-area { position:relative; padding:0 0 0 75px; }
 	.return-info-tit { position:absolute; top:0; left:0; }
 	.return-info-txt { color:#2f3338; text-align:right; }
-	.return-info-total { position:relative; color:#2f3338; padding:5px 0 0 75px; border-top:1px solid #3d4248; font-weight:bold; }
+	.return-info-total { position:relative; color:#2f3338; padding:5px 0 0 75px; border-top:1px solid #11447B; font-weight:bold; }
 	.return-info-total .return-info-tit { top:5px; }
 	.cancel-class-btn { padding:50px 5% 80px; text-align:center; }
-	.btn-cancel-class { display:inline-block; width:48%; height:40px; color:#3d4248; border:1px solid #3d4248; line-height:38px; }
+	.btn-cancel-class { display:inline-block; width:48%; height:40px; color:#3d4248; border:1px solid #11447B; line-height:38px; }
 	.btn-order-cancel { margin:0 0 0 2%; color:#FFFFFF; background:#3d4248; border:0; line-height:40px; }
 
 /* 교환신청 레이어 */

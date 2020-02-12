@@ -45,14 +45,12 @@
             <span class="i-lecturer">${classDetail.teacher}</span>
             ${classDetail.cl_title}
          </div>
-         <div class="vod-info-price-discount">
-             <span class="i-regularPrice view-class-discount-regularPrice">
-                <fmt:formatNumber value="${classDetail.cl_price}" pattern="##,###" />원
-             </span>
+         <div class="vod-info-price">
+         	<span class="vod-info-price-number view-class-price"><fmt:formatNumber value="${classDetail.cl_price}" pattern="##,###" /></span><span class="i-won">원</span>
          </div>
          <ul class="vod-info-list">
             <li class="vod-info">
-               <span class="vod-info-list-tit"> 적립   마일리지</span>
+               <span class="vod-info-list-tit"> 적립 마일리지</span>
                <span class="vod-info-list-txt view-class-mileage">
                   최대 <fmt:formatNumber value="${classDetail.cl_price *0.1}" pattern="##,###" />p
                </span>
@@ -503,8 +501,7 @@
                   </p>
 
                   <p>
-                     <span style="font-size: 14px;">* 반품 신청 시, 담당자가 연락 후 반품 택배
-                        접수를 도와드립니다. 연락없이 먼저 발송하지 말아주세요.</span>
+                     <span style="font-size: 14px;">* 반품 신청 시, 담당자가 연락 후 반품 택배 접수를 도와드립니다. 연락없이 먼저 발송하지 말아주세요.</span>
                   </p>
                </div>
             </div>
